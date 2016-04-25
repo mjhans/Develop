@@ -4,7 +4,7 @@
 
 # pip install watchdog
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 
 from watchdog.observers import Observer
@@ -16,26 +16,40 @@ from define import *
 
 class DataHandler(FileSystemEventHandler):
 
+    def __init__(self):
+        self.runcount = 0
+        self.cumulate_timediff = timedelta(0)
+
     def process(self, event):
         print "Got it!"
         print event.src_path, event.event_type
+        self.runcount += 1
 
         bulk_sql = LOAD_INFILE % (event.src_path, TABLENAME)
-        print bulk_sql
+        #print bulk_sql
 
         try:
             cnx = mariadb.connect(user=UID, password=PASSWORD, host=IP, database=DATABASE)
             cursor = cnx.cursor()
-            #cursor.execute("")
             sts = datetime.now()
+            cursor.execute("SET autocommit = 0")
             cursor.execute(bulk_sql)
             cnx.commit()
             ets = datetime.now()
 
-            print """ \
+            self.cumulate_timediff += (ets-sts)
+            print """\
 during time : %s
+inserted total row : %s
+time diff : %s
 time per 1 row : %s
-            """ % ((ets -sts),(ets-sts) / 18150)
+time per 10,000 row : %s
+""" %\
+((ets -sts),
+(self.runcount * 20000),
+self.cumulate_timediff,
+(self.cumulate_timediff / (self.runcount * 20000)),
+(self.cumulate_timediff / ((self.runcount * 20000)) * 10000))
         except Exception, msg:
 
             print msg

@@ -16,6 +16,9 @@ def createTable(cursor):
     :param cursor:
     :return:
     """
+    sql = "DROP TABLE IF EXISTS gCreateLogTable;"
+    cursor.execute(sql)
+
     sql = """
 CREATE TABLE IF NOT EXISTS %s (
 id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
