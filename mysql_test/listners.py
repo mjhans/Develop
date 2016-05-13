@@ -37,6 +37,9 @@ class DataHandler(FileSystemEventHandler):
             cnx.commit()
             ets = datetime.now()
 
+            if self.runcount % 10 == 0:
+                cnx.commit()
+
             self.cumulate_timediff += (ets-sts)
             print """\
 during time : %s
