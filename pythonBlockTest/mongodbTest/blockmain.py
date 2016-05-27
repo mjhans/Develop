@@ -7,9 +7,9 @@ from  mongo import *
 
 THREAD_MAX_CNT = 10
 
-def startMongo():
+def startMongo(conn):
 	try:
-		mongoUpdate(mongodbconn())
+		mongoUpdate(conn)
 	except Exception, msg:
 		raise Exception(msg)
 
@@ -17,17 +17,20 @@ def startMongo():
 if __name__ == "__main__":
 	tlist = list()
 	try:
-		startMongo()
-		startMongo()
-		startMongo()
-		startMongo()
-		startMongo()
+		conn = mongodbconn()
 
-		startMongo()
-		startMongo()
-		startMongo()
-		startMongo()
-		startMongo()
+		for i in range(THREAD_MAX_CNT):
+			startMongo(conn)
+		# startMongo(conn)
+		# startMongo(conn)
+		# startMongo(conn)
+		# startMongo(conn)
+		#
+		# startMongo(conn)
+		# startMongo(conn)
+		# startMongo(conn)
+		# startMongo(conn)
+		# startMongo(conn)
 
 	except Exception, msg:
 		print msg

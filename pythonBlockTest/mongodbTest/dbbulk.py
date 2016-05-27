@@ -11,6 +11,6 @@ if __name__ == "__main__":
 	try:
 		conn = mongodbconn()
 		mongobulkInsert(conn)
-		#mongoInsert(conn)
+		mongoInsert(conn)
 	except Exception, msg:
 		print msg
