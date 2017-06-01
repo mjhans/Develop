@@ -9,6 +9,20 @@ def coroutine(func):
 		return cr
 	return start
 
+class myreturn(Exception):
+	def __init__(self, value):
+		self.value = value
+
+def delegate():
+	yield 1
+	yield 2
+
+def composed():
+	yield 'A'
+	for value in delegate():
+		yield value
+	yield {"test":0, "test2":1}
+
 #=====================================================================================
 @coroutine
 def testCoroutine1():
@@ -39,9 +53,9 @@ if __name__ == '__main__':
 	# it = testCoroutine1()
 	# it2 = testCoroutine2()
 	# it.send(("co1", 100, it2,))
-	# it2.send("******************************")
-	# it.send(("co2", 100, it2,))
-	x = testGenerator(10)
-	print x.next()
-	print x.next()
-	print x.next()
+
+	it = composed()
+	print next(it)
+	print it.send(1)
+	print it.send(1)
+	print it.send(1)
